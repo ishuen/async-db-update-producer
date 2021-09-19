@@ -17,7 +17,7 @@ There are 2 repositories involved. One is the producer repo **async-db-update-pr
 6. The consumer application inserts the data to the database.
 
 ## Data source
-[US stock market data from Alpaca websocket stream](https://alpaca.markets/docs/api-documentation/api-v2/streaming/)
+[US stock market data from Alpaca websocket stream](https://alpaca.markets/docs/api-documentation/api-v2/market-data/alpaca-data-api-v2/real-time/)
 
 ## Getting start
 
