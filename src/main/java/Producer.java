@@ -6,6 +6,7 @@ public class Producer {
   private final static String QUEUE_NAME = "queue";
   public static void main(String[] argv) throws Exception {
     StockMarket stockClient = new StockMarket();
+    stockClient.connect();
     ConnectionFactory connectionFactory = new ConnectionFactory();
     connectionFactory.setHost("localhost");
     try (Connection connection = connectionFactory.newConnection();
