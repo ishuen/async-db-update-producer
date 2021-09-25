@@ -12,4 +12,9 @@ public class JsonConverter {
     }
     return json;
   }
+
+  public static <T> T toObject(String s, Class<T> tClass) throws Exception {
+    ObjectMapper objectMapper = new ObjectMapper();
+    return objectMapper.readValue(s, tClass);
+  }
 }
