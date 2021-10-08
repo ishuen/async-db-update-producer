@@ -31,8 +31,8 @@ public class StockMarketListener extends WebSocketListener {
       return;
     }
     try {
-      AuthResponse authResponse = JsonConverter.toObject(text, AuthResponse.class);
-      if (authResponse.isAuthenticated()) {
+      AuthResponse[] authResponse = JsonConverter.toObject(text, AuthResponse[].class);
+      if (authResponse[0].isAuthenticated()) {
         isAuthenticated = true;
         List<String> brandList = new LinkedList<>();
         brandList.add("AAPL");
