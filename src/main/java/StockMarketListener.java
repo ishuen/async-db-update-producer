@@ -13,6 +13,7 @@ public class StockMarketListener extends WebSocketListener {
   private String secretKey;
   private ConnectionFactory connectionFactory;
   private boolean isAuthenticated = false;
+  private boolean hasSubscribed = false;
   private final static String QUEUE_NAME = "queue";
 
   public StockMarketListener(String apiKey, String secretKey) {
@@ -32,7 +33,7 @@ public class StockMarketListener extends WebSocketListener {
   @Override
   public void onMessage(WebSocket webSocket, String text) {
     System.out.println("MESSAGE: " + text);
-    if (isAuthenticated) {
+    if (isAuthenticated && hasSubscribed) {
       try (Connection connection = connectionFactory.newConnection();
              Channel channel = connection.createChannel()) {
           channel.queueDeclare(QUEUE_NAME, false, false, false, null);
@@ -41,6 +42,12 @@ public class StockMarketListener extends WebSocketListener {
       } catch (Exception e) {
         System.out.println("PUSH FAILED: " + e.getMessage());
       }
+      return;
+    }
+    if (isAuthenticated) {
+      // capture the subscription message
+      // [{"T":"subscription","trades":["AAPL"],"quotes":[],"bars":[],"dailyBars":[],"statuses":[],"lulds":[]}]
+      hasSubscribed = true;
       return;
     }
     try {
