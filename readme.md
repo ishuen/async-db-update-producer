@@ -24,16 +24,47 @@ There are 2 repositories involved. One is the producer repo **async-db-update-pr
 1. Preparation
 
 	- Prepare a Alpaca paper account
-	- Rename `key.sample.config` file to `key.config` and Specify the API key and secret key in the configuration file
+	- Rename `key.sample.config` file to `key.config` in producer repo and specify the API key and secret key in the configuration file
+	- Install postgresql locally (To utilize docker container is also fine.)
+
+    ```
+    brew install postgresql
+    brew services start postgresql
+    ```
+    
+	- Create a database stock_db in local db server
 	
+	```
+	psql postgres
+	CREATE DATABASE stock_db;
+	```
+
+	- Creata a user for stock_db.
+	
+	```
+	CREATE USER stock_user WITH ENCRYPTED PASSWORD '<password>';
+	GRANT ALL PRIVILEGE ON DATABASE stock_db TO stock_user;
+	\q
+	```
+	
+	- Rename `db.sample.config` file to `db.config` in consumer repo and specify the url, username and password.
+	- Reconnect to the newly created database and create a table.
+	
+	```
+	psql -U stock_user -d stock_db -f <project-root-directory>/src/main/resources/table_creation.sql
+	```
 
 2. Run rabbitmq server locally
 
-```
-docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
-```
+	```
+	docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.9-management
+	```
 
 3. Run DB server
+
+    ```
+    brew services start postgresql
+    ```
 
 4. Run consumer application
 
