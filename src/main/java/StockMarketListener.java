@@ -42,25 +42,28 @@ public class StockMarketListener extends WebSocketListener {
       } catch (Exception e) {
         System.out.println("PUSH FAILED: " + e.getMessage());
       }
-      return;
-    }
-    if (isAuthenticated) {
-      // capture the subscription message
-      // [{"T":"subscription","trades":["AAPL"],"quotes":[],"bars":[],"dailyBars":[],"statuses":[],"lulds":[]}]
-      hasSubscribed = true;
-      return;
-    }
-    try {
-      AuthResponse[] authResponse = JsonConverter.toObject(text, AuthResponse[].class);
-      if (authResponse[0].isAuthenticated()) {
-        isAuthenticated = true;
-        List<String> brandList = List.of("AAPL");
-        SubscribeAction subscribeAction = new SubscribeAction(brandList);
-        String subscribeString = JsonConverter.toJsonString(subscribeAction);
-        webSocket.send(subscribeString);
+    } else if (isAuthenticated) {
+      try {
+        SubscribeResponse[] subscribeResponse = JsonConverter.toObject(text, SubscribeResponse[].class);
+        if (subscribeResponse[0].hasSubscribed()) {
+          hasSubscribed = true;
+        }
+      } catch (Exception e) {
+        System.out.println("Subscription failed: " + e.getMessage());
       }
-    } catch (Exception e) {
-      System.out.println("Authentication failed: " + e.getMessage());
+    } else {
+      try {
+        AuthResponse[] authResponse = JsonConverter.toObject(text, AuthResponse[].class);
+        if (authResponse[0].isAuthenticated()) {
+          isAuthenticated = true;
+          List<String> brandList = List.of("AAPL");
+          SubscribeAction subscribeAction = new SubscribeAction(brandList);
+          String subscribeString = JsonConverter.toJsonString(subscribeAction);
+          webSocket.send(subscribeString);
+        }
+      } catch (Exception e) {
+        System.out.println("Authentication failed: " + e.getMessage());
+      }
     }
   }
 
