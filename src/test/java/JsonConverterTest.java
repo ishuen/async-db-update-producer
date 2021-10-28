@@ -14,16 +14,38 @@ public class JsonConverterTest {
   }
 
   @Test
-  public void oneBrandToJsonString(){
+  public void oneCompanyToJsonString(){
     SubscribeAction subscribeAction = new SubscribeAction(List.of("brand1"));
     String output = JsonConverter.toJsonString(subscribeAction);
     assertEquals("{\"action\":\"subscribe\",\"trades\":[\"brand1\"]}", output);
   }
 
   @Test
-  public void multiBrandToJsonString(){
+  public void multiCompanyToJsonString(){
     SubscribeAction subscribeAction = new SubscribeAction(List.of("brand1", "brand2", "brand3"));
     String output = JsonConverter.toJsonString(subscribeAction);
     assertEquals("{\"action\":\"subscribe\",\"trades\":[\"brand1\",\"brand2\",\"brand3\"]}", output);
+  }
+
+  @Test
+  public void StringToAuthResponse() throws Exception {
+    String authResponseString = "[{\"T\":\"success\",\"msg\":\"authenticated\"}]";
+    AuthResponse[] authResponse = JsonConverter.toObject(authResponseString, AuthResponse[].class);
+    AuthResponse expected = new AuthResponse();
+    expected.setStatus("success");
+    expected.setMessage("authenticated");
+    assertEquals(expected.getStatus(), authResponse[0].getStatus());
+    assertEquals(expected.getMessage(), authResponse[0].getMessage());
+  }
+
+  @Test
+  public void StringToAuthResponseWithExtra() throws Exception {
+    String authResponseString = "[{\"T\":\"success\",\"msg\":\"authenticated\", \"additional\":\"none\"}]";
+    AuthResponse[] authResponse = JsonConverter.toObject(authResponseString, AuthResponse[].class);
+    AuthResponse expected = new AuthResponse();
+    expected.setStatus("success");
+    expected.setMessage("authenticated");
+    assertEquals(expected.getStatus(), authResponse[0].getStatus());
+    assertEquals(expected.getMessage(), authResponse[0].getMessage());
   }
 }
