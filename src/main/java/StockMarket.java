@@ -18,7 +18,7 @@ public class StockMarket {
     baseUrl = keyProps.getProperty("ws-base");
   }
 
-  public void connect() throws Exception {
+  public void connect() {
     StockMarketListener listener = new StockMarketListener(apiKey, secretKey);
     OkHttpClient client = new OkHttpClient.Builder()
             .readTimeout(1000,  TimeUnit.MILLISECONDS)
