@@ -48,4 +48,17 @@ public class JsonConverterTest {
     assertEquals(expected.getStatus(), authResponse[0].getStatus());
     assertEquals(expected.getMessage(), authResponse[0].getMessage());
   }
+
+  @Test
+  public void StringToSubscribeResponse() throws Exception {
+    String subscribeResponseString = "[{\"T\":\"subscription\",\"trades\":[\"AAPL\"],\"quotes\":[],\"bars\":[],\"dailyBars\":[],\"statuses\":[],\"lulds\":[]}]";
+    SubscribeResponse[] subscribeResponse = JsonConverter.toObject(subscribeResponseString, SubscribeResponse[].class);
+    SubscribeResponse expected = new SubscribeResponse();
+    expected.setStatus("subscription");
+    expected.setTrades(new String[]{"AAPL"});
+    expected.setQuotes(new String[]{});
+    assertEquals(expected.getStatus(), subscribeResponse[0].getStatus());
+    assertEquals(expected.getTrades()[0], subscribeResponse[0].getTrades()[0]);
+    assertEquals(expected.getQuotes().length, subscribeResponse[0].getQuotes().length);
+  }
 }
